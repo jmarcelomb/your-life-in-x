@@ -1,0 +1,41 @@
+[package]
+edition = "2021"
+name = "test-esp3"
+version = "0.1.0"
+
+[[bin]]
+name = "test-esp3"
+path = "./src/bin/main.rs"
+
+[dependencies]
+critical-section = "1.2.0"
+esp-backtrace = { version = "0.15.0", features = [
+  "esp32c3",
+  "exception-handler",
+  "panic-handler",
+  "println",
+] }
+esp-hal = { version = "0.19.0", features = ["esp32c3", "embedded-hal"] }
+esp-println = { version = "0.13.0", features = ["esp32c3", "log"] }
+log = { version = "0.4.21" }
+weact-studio-epd = { version = "0.1.2", features = ["blocking"] }
+heapless = "0.8.0"
+display-interface-spi = "0.5.0"
+embedded-graphics = "0.8.1"
+embedded-hal-bus = "0.2.0"
+profont = "0.7.0"
+
+[profile.dev]
+# Rust debug is too slow.
+# For debug builds always builds with some optimization
+opt-level = "s"
+# opt-level = 0
+
+[profile.release]
+codegen-units = 1        # LLVM can perform better optimizations using a single thread
+debug = 2
+debug-assertions = false
+incremental = false
+lto = 'fat'
+opt-level = 's'
+overflow-checks = false
