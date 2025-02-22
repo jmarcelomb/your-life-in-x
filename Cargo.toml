@@ -1,10 +1,11 @@
 [package]
-edition = "2021"
-name = "test-esp3"
+edition = "2024"
+name = "your-life-in-x"
 version = "0.1.0"
+authors = ["Marcelo Borges <me@marceloborges.dev>"]
 
 [[bin]]
-name = "test-esp3"
+name = "your-life-in-x"
 path = "./src/bin/main.rs"
 
 [dependencies]

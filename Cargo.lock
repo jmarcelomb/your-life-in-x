@@ -1004,23 +1004,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "test-esp3"
-version = "0.1.0"
-dependencies = [
- "critical-section",
- "display-interface-spi",
- "embedded-graphics",
- "embedded-hal-bus",
- "esp-backtrace",
- "esp-hal",
- "esp-println",
- "heapless",
- "log",
- "profont",
- "weact-studio-epd",
-]
-
-[[package]]
 name = "toml"
 version = "0.8.20"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1227,4 +1210,21 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn 2.0.96",
+]
+
+[[package]]
+name = "your-life-in-x"
+version = "0.1.0"
+dependencies = [
+ "critical-section",
+ "display-interface-spi",
+ "embedded-graphics",
+ "embedded-hal-bus",
+ "esp-backtrace",
+ "esp-hal",
+ "esp-println",
+ "heapless",
+ "log",
+ "profont",
+ "weact-studio-epd",
 ]
