@@ -1,0 +1,11 @@
+[package]
+name = "simulation"
+version = "0.1.0"
+authors = ["Marcelo Borges <me@marceloborges.dev>"]
+edition = "2024"
+description = "Embedded graphics simulation."
+
+[dependencies]
+embedded-graphics-simulator = "0.7.0"
+embedded-graphics = "0.8.1"
+your-life-in-x = { path = "../your-life-in-x" }

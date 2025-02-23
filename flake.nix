@@ -27,10 +27,14 @@
           ldproxy         # Linker
         ];
 
+        embeddedGraphicsSimulation = with pkgs; [
+          SDL2
+        ];
+
       in {
         devShells.default = pkgs.mkShell {
           name = "dev";
-          buildInputs = [ rustToolchain ] ++ espTools;
+          buildInputs = [ rustToolchain ] ++ espTools ++ embeddedGraphicsSimulation;
         };
       });
 }

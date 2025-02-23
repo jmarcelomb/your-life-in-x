@@ -1,0 +1,3 @@
+[submodule "weact-studio-epd"]
+	path = weact-studio-epd
+	url = https://github.com/jmarcelomb/weact-studio-epd.git

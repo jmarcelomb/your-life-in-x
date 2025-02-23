@@ -3,7 +3,7 @@
 
 use display_interface_spi::SPIInterface;
 use embedded_graphics::{
-    geometry::Point, mono_font::MonoTextStyle, text::Text, text::TextStyle, Drawable,
+    Drawable, geometry::Point, mono_font::MonoTextStyle, text::Text, text::TextStyle,
 };
 use embedded_hal_bus::spi::ExclusiveDevice;
 use esp_backtrace as _;
@@ -12,15 +12,15 @@ use esp_hal::{
     gpio::{Input, Level, Output},
     main,
     spi::{
-        master::{Config, Spi},
         Mode,
+        master::{Config, Spi},
     },
     time::RateExtU32,
 };
 use profont::PROFONT_24_POINT;
 use weact_studio_epd::graphics::Display290TriColor;
-use weact_studio_epd::{graphics::DisplayRotation, TriColor, WeActStudio290TriColorDriver};
-
+use weact_studio_epd::{TriColor, WeActStudio290TriColorDriver, graphics::DisplayRotation};
+use your_life_in_x;
 // epaper connections:
 // DC: 21, RST: 22, BUSY: 23, CS/SS: 15, SCK: 6, MISO: -1, MOSI: 7
 
@@ -66,23 +66,25 @@ fn main() -> ! {
     driver.init().unwrap();
     log::info!("Display initialized.");
 
-    // Write hello world
-    let black_style = MonoTextStyle::new(&PROFONT_24_POINT, TriColor::Black);
-    let red_style = MonoTextStyle::new(&PROFONT_24_POINT, TriColor::Red);
-    let _ = Text::with_text_style(
-        "Hello World!",
-        Point::new(8, 40),
-        black_style,
-        TextStyle::default(),
-    )
-    .draw(&mut display);
-    let _ = Text::with_text_style(
-        "Hello World!",
-        Point::new(8, 80),
-        red_style,
-        TextStyle::default(),
-    )
-    .draw(&mut display);
+    your_life_in_x::draw(&mut display);
+
+    // // Write hello world
+    // let black_style = MonoTextStyle::new(&PROFONT_24_POINT, TriColor::Black);
+    // let red_style = MonoTextStyle::new(&PROFONT_24_POINT, TriColor::Red);
+    // let _ = Text::with_text_style(
+    //     "Hello World!",
+    //     Point::new(8, 40),
+    //     black_style,
+    //     TextStyle::default(),
+    // )
+    // .draw(&mut display);
+    // let _ = Text::with_text_style(
+    //     "Hello World!",
+    //     Point::new(8, 80),
+    //     red_style,
+    //     TextStyle::default(),
+    // )
+    // .draw(&mut display);
 
     // Update display
     driver.full_update(&display).unwrap();
