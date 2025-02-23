@@ -19,12 +19,12 @@ esp-backtrace = { version = "0.15.0", features = [
 esp-hal = { version = "0.23.1", features = ["esp32c3", "log"] }
 esp-println = { version = "0.13.0", features = ["esp32c3", "log"] }
 log = { version = "0.4.21" }
-weact-studio-epd = { version = "0.1.2", features = ["blocking"] }
 heapless = "0.8.0"
 display-interface-spi = "0.5.0"
 embedded-graphics = "0.8.1"
 embedded-hal-bus = "0.3.0"
 profont = "0.7.0"
+weact-studio-epd = { path = "../weact-studio-epd/", features = ["blocking"] }
 your-life-in-x = { path = "../your-life-in-x" }
 
 [profile.dev]

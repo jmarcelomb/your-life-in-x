@@ -10,4 +10,4 @@ embedded-text = "0.7.2"
 eg-seven-segment = "0.2.0"
 tinybmp = "0.6.0"
 tinytga = "0.5.0"
-weact-studio-epd = { version = "0.1.2", features = ["blocking"] }
+weact-studio-epd = { path = "../weact-studio-epd/", features = ["blocking"] }
