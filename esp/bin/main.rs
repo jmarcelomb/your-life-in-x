@@ -2,9 +2,6 @@
 #![no_main]
 
 use display_interface_spi::SPIInterface;
-use embedded_graphics::{
-    Drawable, geometry::Point, mono_font::MonoTextStyle, text::Text, text::TextStyle,
-};
 use embedded_hal_bus::spi::ExclusiveDevice;
 use esp_backtrace as _;
 use esp_hal::{
@@ -17,10 +14,8 @@ use esp_hal::{
     },
     time::RateExtU32,
 };
-use profont::PROFONT_24_POINT;
 use weact_studio_epd::graphics::Display290TriColor;
-use weact_studio_epd::{TriColor, WeActStudio290TriColorDriver, graphics::DisplayRotation};
-use your_life_in_x;
+use weact_studio_epd::{WeActStudio290TriColorDriver, graphics::DisplayRotation};
 // epaper connections:
 // DC: 21, RST: 22, BUSY: 23, CS/SS: 15, SCK: 6, MISO: -1, MOSI: 7
 
@@ -66,7 +61,7 @@ fn main() -> ! {
     driver.init().unwrap();
     log::info!("Display initialized.");
 
-    your_life_in_x::draw(&mut display);
+    let _ = your_life_in_x::draw(&mut display);
 
     // Update display
     driver.full_update(&display).unwrap();
