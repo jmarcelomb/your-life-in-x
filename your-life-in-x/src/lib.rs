@@ -1,54 +1,15 @@
 #![no_std]
 
-use core::result::Result; // for derive macros
+use core::result::Result;
 
 use embedded_graphics::{
     mono_font::{MonoTextStyle, ascii::FONT_6X9},
-    pixelcolor::Rgb888,
-    pixelcolor::raw::RawU2,
     prelude::*,
     primitives::{Circle, Line, PrimitiveStyle, Rectangle},
     text::Text,
 };
 
 pub use weact_studio_epd::TriColor;
-//
-// /// Custom TriColor enum for e-paper displays.
-// #[derive(Debug, Clone, Copy, PartialEq, Default)]
-// pub enum TriColor {
-//     /// Black color
-//     Black,
-//     /// White color
-//     #[default]
-//     White,
-//     /// Red color
-//     Red,
-// }
-//
-// impl PixelColor for TriColor {
-//     type Raw = RawU2; // Correct type for 2-bit color representation
-// }
-//
-// impl From<TriColor> for Rgb888 {
-//     fn from(val: TriColor) -> Self {
-//         match val {
-//             TriColor::White => Rgb888::new(255, 255, 255),
-//             TriColor::Black => Rgb888::new(0, 0, 0),
-//             TriColor::Red => Rgb888::new(255, 0, 0),
-//         }
-//     }
-// }
-//
-// impl From<Rgb888> for TriColor {
-//     fn from(rgb: Rgb888) -> Self {
-//         match (rgb.r(), rgb.g(), rgb.b()) {
-//             (255, 255, 255) => TriColor::White,
-//             (0, 0, 0) => TriColor::Black,
-//             (255, 0, 0) => TriColor::Red,
-//             _ => TriColor::White,
-//         }
-//     }
-// }
 
 /// Draws shapes and text on the provided display.
 ///

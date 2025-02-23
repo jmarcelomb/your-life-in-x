@@ -68,24 +68,6 @@ fn main() -> ! {
 
     your_life_in_x::draw(&mut display);
 
-    // // Write hello world
-    // let black_style = MonoTextStyle::new(&PROFONT_24_POINT, TriColor::Black);
-    // let red_style = MonoTextStyle::new(&PROFONT_24_POINT, TriColor::Red);
-    // let _ = Text::with_text_style(
-    //     "Hello World!",
-    //     Point::new(8, 40),
-    //     black_style,
-    //     TextStyle::default(),
-    // )
-    // .draw(&mut display);
-    // let _ = Text::with_text_style(
-    //     "Hello World!",
-    //     Point::new(8, 80),
-    //     red_style,
-    //     TextStyle::default(),
-    // )
-    // .draw(&mut display);
-
     // Update display
     driver.full_update(&display).unwrap();
 
