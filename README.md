@@ -94,4 +94,3 @@ This project combines **low-power hardware**, **SPI communication**, and **graph
 ## License
 
 This project is licensed under **MIT OR Apache-2.0**, following the same dual-license model as Rust itself.
-

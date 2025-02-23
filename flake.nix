@@ -31,10 +31,14 @@
           SDL2
         ];
 
+        devPackages = with pkgs; [
+          pre-commit
+        ];
+
       in {
         devShells.default = pkgs.mkShell {
           name = "dev";
-          buildInputs = [ rustToolchain ] ++ espTools ++ embeddedGraphicsSimulation;
+          buildInputs = [ rustToolchain ] ++ espTools ++ embeddedGraphicsSimulation ++ devPackages;
         };
       });
 }
