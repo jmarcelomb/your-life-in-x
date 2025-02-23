@@ -38,18 +38,25 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Setup Rust
-        uses: dtolnay/rust-toolchain@v1
+      - name: Cache Nix Store
+        uses: actions/cache@v3
         with:
-          target: riscv32imc-unknown-none-elf
-          toolchain: stable
-          components: rust-src, rustfmt, clippy
+          path: /nix/store
+          key: nix-${{ runner.os }}-${{ hashFiles('flake.lock') }}
+          restore-keys: |
+            nix-${{ runner.os }}-
 
-      - name: Enable caching
-        uses: Swatinem/rust-cache@v2
+      - name: Install Nix
+        uses: cachix/install-nix-action@v27
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+            keep-outputs = true
+            keep-derivations = true
 
-      - name: Run command
+      - name: Use Nix shell
         run: |
+          nix develop --command bash -c '
           if [[ -n "${{ matrix.action.package }}" ]]; then
             cargo ${{ matrix.action.command }} --package ${{ matrix.action.package }} ${{ matrix.action.args }}
           elif [[ -n "${{ matrix.action.directory }}" ]]; then
@@ -57,3 +64,4 @@ jobs:
           else
             cargo ${{ matrix.action.command }} ${{ matrix.action.args }}
           fi
+          '
