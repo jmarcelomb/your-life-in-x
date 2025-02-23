@@ -1,6 +1,8 @@
 # Your Life in X
 
-![Your Life in X Example](docs/your-life-in-x-example.png)
+<p align="center">
+  <img src="https://github.com/jmarcelomb/your-life-in-x/blob/main/docs/your-life-in-x-example.png?raw=true" alt="Your Life in X Example"/>
+</p>
 
 ## Overview
 
