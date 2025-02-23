@@ -34,7 +34,7 @@ jobs:
             directory: esp
             args: --release --all-features -- -D warnings
           - command: clippy
-            args: --release --all-features --workspace -- -D warnings
+            args: --release --exclude esp --all-features --workspace -- -D warnings
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
