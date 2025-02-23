@@ -21,6 +21,13 @@ jobs:
         action:
           - command: build
             args: --release
+            package: your-life-in-x
+          - command: build
+            args: --release
+            package: simulation
+          - command: build
+            args: --release
+            directory: esp
           - command: fmt
             args: --all -- --check --color always
           - command: clippy
@@ -28,13 +35,23 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@v1
         with:
           target: riscv32imc-unknown-none-elf
           toolchain: stable
           components: rust-src, rustfmt, clippy
+
       - name: Enable caching
         uses: Swatinem/rust-cache@v2
+
       - name: Run command
-        run: cargo ${{ matrix.action.command }} ${{ matrix.action.args }}
+        run: |
+          if [[ -n "${{ matrix.action.package }}" ]]; then
+            cargo ${{ matrix.action.command }} --package ${{ matrix.action.package }} ${{ matrix.action.args }}
+          elif [[ -n "${{ matrix.action.directory }}" ]]; then
+            cd ${{ matrix.action.directory }} && cargo ${{ matrix.action.command }} ${{ matrix.action.args }}
+          else
+            cargo ${{ matrix.action.command }} ${{ matrix.action.args }}
+          fi
