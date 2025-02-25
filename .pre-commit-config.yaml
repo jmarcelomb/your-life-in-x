@@ -21,11 +21,11 @@ repos:
     hooks:
     - id: check-json5
   - repo: https://github.com/crate-ci/typos
-    rev: v1.29.5
+    rev: v1.29.9
     hooks:
       - id: typos
   - repo: https://github.com/gitleaks/gitleaks
-    rev: v8.23.3
+    rev: v8.24.0
     hooks:
       - id: gitleaks
   - repo: https://github.com/backplane/pre-commit-rust-hooks
