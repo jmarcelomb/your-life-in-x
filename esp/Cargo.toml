@@ -10,7 +10,7 @@ path = "./bin/main.rs"
 
 [dependencies]
 critical-section = "1.2.0"
-esp-backtrace = { version = "0.15.0", features = [
+esp-backtrace = { version = "0.15.1", features = [
   "esp32c3",
   "exception-handler",
   "panic-handler",
