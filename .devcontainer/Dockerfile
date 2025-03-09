@@ -1,59 +1,57 @@
-# Base image
-ARG VARIANT=bookworm-slim
-FROM debian:${VARIANT}
-ENV DEBIAN_FRONTEND=noninteractive
-ENV LC_ALL=C.UTF-8
-ENV LANG=C.UTF-8
+# Use a minimal Debian base image
+FROM debian:stable-slim
 
-# Arguments
-ARG CONTAINER_USER=esp
-ARG CONTAINER_GROUP=esp
-ARG ESP_BOARD=all
-ARG GITHUB_TOKEN
+# Set up environment variables
+ENV USER=vscode
+ENV HOME=/home/$USER
 
-# Install dependencies
-RUN apt-get update \
-    && apt-get install -y git curl llvm-dev libclang-dev clang unzip \
-    libusb-1.0-0 libssl-dev libudev-dev pkg-config \
-    && apt-get clean -y && rm -rf /var/lib/apt/lists/* /tmp/library-scripts
+# Install dependencies for Nix and general development
+RUN apt-get update && apt-get install -y \
+    curl \
+    xz-utils \
+    git \
+    sudo \
+    bash \
+    && rm -rf /var/lib/apt/lists/*
 
-# Set users
-RUN adduser --disabled-password --gecos "" ${CONTAINER_USER}
-USER ${CONTAINER_USER}
-WORKDIR /home/${CONTAINER_USER}
+# Create a non-root user and set up their home directory
+RUN useradd -m -s /bin/bash $USER \
+    && echo "$USER ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/$USER \
+    && chmod 0440 /etc/sudoers.d/$USER \
+    && mkdir -p $HOME/.config/nix \
+    && mkdir -p $HOME/.local/share/direnv \
+    && chown -R $USER:$USER $HOME
 
-# Install rustup
-RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- \
-    --default-toolchain none -y --profile minimal
+# Create the nixbld group and add the user to it
+RUN groupadd -r nixbld \
+    && for i in $(seq 1 32); do useradd -r -g nixbld -G nixbld nixbld$i || true; done \
+    && usermod -a -G nixbld $USER
 
-# Update envs
-ENV PATH=${PATH}:/home/${CONTAINER_USER}/.cargo/bin
+# Switch to the non-root user
+USER $USER
+WORKDIR $HOME
 
-# Install extra crates
-RUN ARCH=$($HOME/.cargo/bin/rustup show | grep "Default host" | sed -e 's/.* //') && \
-    curl -L "https://github.com/esp-rs/espup/releases/latest/download/espup-${ARCH}" -o "${HOME}/.cargo/bin/espup" && \
-    chmod u+x "${HOME}/.cargo/bin/espup" && \
-    curl -L "https://github.com/esp-rs/espflash/releases/latest/download/cargo-espflash-${ARCH}.zip" -o "${HOME}/.cargo/bin/cargo-espflash.zip" && \
-    unzip "${HOME}/.cargo/bin/cargo-espflash.zip" -d "${HOME}/.cargo/bin/" && \
-    rm "${HOME}/.cargo/bin/cargo-espflash.zip" && \
-    chmod u+x "${HOME}/.cargo/bin/cargo-espflash" && \
-    curl -L "https://github.com/esp-rs/espflash/releases/latest/download/espflash-${ARCH}.zip" -o "${HOME}/.cargo/bin/espflash.zip" && \
-    unzip "${HOME}/.cargo/bin/espflash.zip" -d "${HOME}/.cargo/bin/" && \
-    rm "${HOME}/.cargo/bin/espflash.zip" && \
-    chmod u+x "${HOME}/.cargo/bin/espflash" && \
-    curl -L "https://github.com/esp-rs/esp-web-flash-server/releases/latest/download/web-flash-${ARCH}.zip" -o "${HOME}/.cargo/bin/web-flash.zip" && \
-    unzip "${HOME}/.cargo/bin/web-flash.zip" -d "${HOME}/.cargo/bin/" && \
-    rm "${HOME}/.cargo/bin/web-flash.zip" && \
-    chmod u+x "${HOME}/.cargo/bin/web-flash"
+# Install Nix as the non-root user
+RUN curl -L https://nixos.org/nix/install | sh -s -- --no-daemon
 
-# Install Xtensa Rust
-RUN if [ -n "${GITHUB_TOKEN}" ]; then export GITHUB_TOKEN=${GITHUB_TOKEN}; fi  \
-    && ${HOME}/.cargo/bin/espup install\
-    --targets "${ESP_BOARD}" \
-    --log-level debug \
-    --export-file /home/${CONTAINER_USER}/export-esp.sh
+# Set up Nix environment for the user
+RUN echo "source $HOME/.nix-profile/etc/profile.d/nix.sh" >> $HOME/.bashrc
 
-# Activate ESP environment
-RUN echo "source /home/${CONTAINER_USER}/export-esp.sh" >> ~/.bashrc
+# Enable Flakes and nix-command in Nix
+RUN mkdir -p $HOME/.config/nix && echo "experimental-features = nix-command flakes" >> $HOME/.config/nix/nix.conf
 
-CMD [ "/bin/bash" ]
+# Install Direnv and configure it
+RUN . $HOME/.nix-profile/etc/profile.d/nix.sh \
+    && nix-env -iA nixpkgs.direnv \
+    && echo 'eval "$(direnv hook bash)"' >> $HOME/.bashrc
+
+# Set up a sample project directory
+RUN mkdir -p $HOME/your-life-in-x
+WORKDIR $HOME/your-life-in-x
+
+# Example: Initialize a flake-enabled Nix project
+RUN . $HOME/.nix-profile/etc/profile.d/nix.sh \
+    && nix flake init -t templates#trivial
+
+# Default command (optional)
+CMD ["bash"]
