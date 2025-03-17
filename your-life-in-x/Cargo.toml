@@ -11,4 +11,3 @@ eg-seven-segment = "0.2.0"
 tinybmp = "0.6.0"
 tinytga = "0.5.0"
 weact-studio-epd = { path = "../weact-studio-epd/", features = ["blocking"] }
-chrono-light = "0.1.5"

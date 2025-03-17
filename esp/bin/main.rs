@@ -2,6 +2,7 @@
 #![no_main]
 
 use display_interface_spi::SPIInterface;
+use embedded_graphics::prelude::*;
 use embedded_hal_bus::spi::ExclusiveDevice;
 use esp_backtrace as _;
 use esp_hal::{
@@ -16,6 +17,7 @@ use esp_hal::{
 };
 use weact_studio_epd::graphics::Display290TriColor;
 use weact_studio_epd::{WeActStudio290TriColorDriver, graphics::DisplayRotation};
+use your_life_in_x::{Container, DateTime};
 // epaper connections:
 // DC: 21, RST: 22, BUSY: 23, CS/SS: 15, SCK: 6, MISO: -1, MOSI: 7
 
@@ -57,11 +59,35 @@ fn main() -> ! {
     log::info!("Initializing EPD...");
     let mut driver = WeActStudio290TriColorDriver::new(spi_interface, busy, rst, delay);
     let mut display = Display290TriColor::new();
-    display.set_rotation(DisplayRotation::Rotate90);
+    // display.set_rotation(DisplayRotation::Rotate90);
     driver.init().unwrap();
     log::info!("Display initialized.");
 
-    let _ = your_life_in_x::draw(&mut display);
+    let width = 128;
+    let height = 296;
+    let life_in_draw_container = Container {
+        point: Point { x: 0, y: 0 },
+        width,
+        height,
+    };
+    let birthday = DateTime {
+        year: 1998,
+        month: 9,
+        day: 10,
+
+        hour: 11,
+        minute: 30,
+        second: 0,
+        ms: 0,
+    };
+
+    let _ = your_life_in_x::draw_life_in_years(
+        &mut display,
+        &birthday,
+        90,
+        2025,
+        &life_in_draw_container,
+    );
 
     // Update display
     driver.full_update(&display).unwrap();

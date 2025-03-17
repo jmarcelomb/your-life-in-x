@@ -1,8 +1,8 @@
-use chrono_light::prelude::DateTime;
 use embedded_graphics::prelude::*;
 use embedded_graphics_simulator::{OutputSettingsBuilder, SimulatorDisplay, Window};
 use your_life_in_x::{
-    Container, TriColor, draw_filled_losango_with_border, draw_life_calendar, draw_life_in_years,
+    Container, DateTime, TriColor, draw_filled_losango_with_border, draw_life_calendar,
+    draw_life_in_years,
 };
 
 fn main() {

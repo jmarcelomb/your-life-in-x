@@ -2,7 +2,6 @@
 
 use core::result::Result;
 
-use chrono_light::prelude::DateTime;
 use embedded_graphics::{
     mono_font::{MonoTextStyle, ascii::FONT_6X9},
     prelude::*,
@@ -11,6 +10,31 @@ use embedded_graphics::{
 };
 
 pub use weact_studio_epd::TriColor;
+
+#[derive(Clone, Default, Debug, PartialEq, Eq, PartialOrd, Ord)]
+pub struct DateTime {
+    // date
+    pub year: u16,
+    pub month: u8,
+    pub day: u8,
+
+    // time
+    pub hour: u8,
+    pub minute: u8,
+    pub second: u8,
+    pub ms: u16,
+}
+
+// impl DateTime {
+//     /// Calculates ms for the day
+//     pub fn to_day_unixtime(&self) -> u64 {
+//         self.day.checked_sub(1).expect("failed to calc day - 1") as u64 * MS_IN_DAY
+//             + self.hour as u64 * MS_IN_HOUR
+//             + self.minute as u64 * MS_IN_MIN
+//             + self.second as u64 * MS_IN_SEC
+//             + self.ms as u64
+//     }
+// }
 
 /// Represents a rectangular container with an origin point, width, and height.
 /// The origin point is the top-left corner of the container.
@@ -95,6 +119,7 @@ where
 pub fn draw_life_in_years<T>(
     display: &mut T,
     birthday: &DateTime,
+    // birth_year: u16,
     life_expectancy: u32,
     current_year: u16,
     container: &Container,
