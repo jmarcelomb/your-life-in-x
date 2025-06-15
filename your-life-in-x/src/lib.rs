@@ -119,16 +119,22 @@ where
 pub fn draw_life_in_years<T>(
     display: &mut T,
     birthday: &DateTime,
-    // birth_year: u16,
+    current_date: &DateTime,
     life_expectancy: u32,
-    current_year: u16,
     container: &Container,
 ) -> Result<(), T::Error>
 where
     T: DrawTarget<Color = TriColor>,
 {
     let birth_year = birthday.year;
-    let age = current_year.saturating_sub(birth_year); // Years lived
+    let mut age = current_date.year.saturating_sub(birth_year); // Years lived
+
+    // Adjust age based on month and day
+    if current_date.month < birthday.month
+        || (current_date.month == birthday.month && current_date.day < birthday.day)
+    {
+        age = age.saturating_sub(1);
+    }
 
     // Define padding and losango size
     let padding = 5;

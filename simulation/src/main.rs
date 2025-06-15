@@ -28,8 +28,25 @@ fn main() {
         Size::new(width as u32, height as u32),
         TriColor::White,
     );
+
+    let current_date = DateTime {
+        year: 2025,
+        month: 6,
+        day: 15,
+
+        hour: 0,
+        minute: 0,
+        second: 0,
+        ms: 0,
+    };
     // let _ = draw_filled_losango_with_border(&mut display, Point::new(100, 50), 40, TriColor::Red);
-    let _ = draw_life_in_years(&mut display, &birthday, 90, 2025, &life_in_draw_container);
+    let _ = draw_life_in_years(
+        &mut display,
+        &birthday,
+        &current_date,
+        80,
+        &life_in_draw_container,
+    );
     // let _ = draw_life_calendar(&mut display, &birthday, 90, 2025, (52, 90), 3);
 
     let output_settings = OutputSettingsBuilder::new().build();
