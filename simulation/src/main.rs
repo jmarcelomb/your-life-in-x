@@ -1,9 +1,6 @@
 use embedded_graphics::prelude::*;
 use embedded_graphics_simulator::{OutputSettingsBuilder, SimulatorDisplay, Window};
-use your_life_in_x::{
-    Container, DateTime, TriColor, draw_filled_losango_with_border, draw_life_calendar,
-    draw_life_in_years,
-};
+use your_life_in_x::{Container, DateTime, TriColor, draw_life_in_months, draw_life_in_years};
 
 fn main() {
     // Use with_default_color instead of new
@@ -39,7 +36,6 @@ fn main() {
         second: 0,
         ms: 0,
     };
-    // let _ = draw_filled_losango_with_border(&mut display, Point::new(100, 50), 40, TriColor::Red);
     let _ = draw_life_in_years(
         &mut display,
         &birthday,
@@ -47,8 +43,18 @@ fn main() {
         80,
         &life_in_draw_container,
     );
-    // let _ = draw_life_calendar(&mut display, &birthday, 90, 2025, (52, 90), 3);
 
     let output_settings = OutputSettingsBuilder::new().build();
-    Window::new("Your Life in Weeks", &output_settings).show_static(&display);
+    Window::new("Your Life in Years", &output_settings).show_static(&display);
+    let _ = display.clear(TriColor::White);
+
+    let _ = draw_life_in_months(
+        &mut display,
+        &birthday,
+        &current_date,
+        80,
+        &life_in_draw_container,
+    );
+    let output_settings = OutputSettingsBuilder::new().build();
+    Window::new("Your Life in Months", &output_settings).show_static(&display);
 }

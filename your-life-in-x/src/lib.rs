@@ -181,58 +181,85 @@ where
     Ok(())
 }
 
-/// Draws a life calendar on the provided display.
+/// Draws a life calendar in months on the provided display using circles.
 ///
 /// # Arguments
 ///
 /// * `display` - A mutable reference to a display implementing the `DrawTarget` trait.
 /// * `birthday` - The birth date of the person.
+/// * `current_date` - The current date.
 /// * `life_expectancy` - The life expectancy in years.
-/// * `current_year` - The current year.
-/// * `grid_size` - The size of the grid (columns, rows).
-/// * `cell_size` - The size of each cell in the grid.
+/// * `container` - The container defining the area to draw the calendar.
 ///
 /// # Returns
 ///
 /// * `Result<(), T::Error>` - Returns `Ok(())` if the drawing is successful, otherwise returns an error.
-pub fn draw_life_calendar<T>(
+pub fn draw_life_in_months<T>(
     display: &mut T,
     birthday: &DateTime,
+    current_date: &DateTime,
     life_expectancy: u32,
-    current_year: u16,
-    grid_size: (u32, u32),
-    cell_size: u32,
+    container: &Container,
 ) -> Result<(), T::Error>
 where
     T: DrawTarget<Color = TriColor>,
 {
-    let (cols, rows) = grid_size; // (52 weeks, 90 years) or (12 months, 90 years)
+    let months_lived = {
+        let mut months = (current_date.year - birthday.year) as u32 * 12;
+        if current_date.month < birthday.month
+            || (current_date.month == birthday.month && current_date.day < birthday.day)
+        {
+            months = months.saturating_sub(1);
+        }
+        months + current_date.month as u32 - birthday.month as u32
+    };
 
-    let past_style = PrimitiveStyle::with_fill(TriColor::Red);
-    let future_style = PrimitiveStyle::with_stroke(TriColor::Black, 1);
+    let total_months = life_expectancy * 12;
 
-    for row in 0..rows {
-        for col in 0..cols {
-            let x = col * (cell_size + 2);
-            let y = row * (cell_size + 2);
+    let padding = 2;
+    let max_per_row = (total_months as f32).sqrt().ceil() as u32;
+    let circle_diameter =
+        (u32::from(container.width.min(container.height)) / max_per_row.max(1)) as i32;
 
-            let age = row as u16;
-            let week_number = col as u16;
-            let year = birthday.year + age;
+    let circle_diameter = circle_diameter.max(2); // Minimum size
+    let radius = circle_diameter / 2;
 
-            let style = if year < current_year {
-                past_style
-            } else {
-                future_style
-            };
+    let cols = container.width as i32 / (circle_diameter + padding);
+    let rows = (total_months as i32 + cols - 1) / cols;
 
-            Rectangle::new(
-                Point::new(x as i32, y as i32),
-                Size::new(cell_size, cell_size),
-            )
+    let total_width = cols * (circle_diameter + padding);
+    let total_height = rows * (circle_diameter + padding);
+
+    let offset_x = (container.width as i32 - total_width) / 2;
+    let offset_y = (container.height as i32 - total_height) / 2;
+
+    let start_x = container.point.x + offset_x;
+    let start_y = container.point.y + offset_y;
+
+    let filled_style = PrimitiveStyleBuilder::new()
+        .fill_color(TriColor::Red)
+        .stroke_color(TriColor::Black)
+        .stroke_width(1)
+        .build();
+
+    let outline_style = PrimitiveStyle::with_stroke(TriColor::Black, 1);
+
+    for i in 0..total_months {
+        let row = i as i32 / cols;
+        let col = i as i32 % cols;
+
+        let center_x = start_x + col * (circle_diameter + padding) + radius;
+        let center_y = start_y + row * (circle_diameter + padding) + radius;
+
+        let style = if i < months_lived {
+            filled_style
+        } else {
+            outline_style
+        };
+
+        Circle::new(Point::new(center_x, center_y), circle_diameter as u32)
             .into_styled(style)
             .draw(display)?;
-        }
     }
 
     Ok(())
