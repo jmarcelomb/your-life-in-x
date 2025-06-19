@@ -80,12 +80,22 @@ fn main() -> ! {
         second: 0,
         ms: 0,
     };
+    let current_date = DateTime {
+        year: 2025,
+        month: 6,
+        day: 15,
 
-    let _ = your_life_in_x::draw_life_in_years(
+        hour: 0,
+        minute: 0,
+        second: 0,
+        ms: 0,
+    };
+
+    let _ = draw_life_in_years(
         &mut display,
         &birthday,
-        90,
-        2025,
+        &current_date,
+        80,
         &life_in_draw_container,
     );
 
