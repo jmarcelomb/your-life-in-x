@@ -6,6 +6,6 @@ edition = "2024"
 description = "Embedded graphics simulation."
 
 [dependencies]
-embedded-graphics-simulator = "0.7.0"
+embedded-graphics-simulator = "0.8.0"
 embedded-graphics = "0.8.1"
 your-life-in-x = { path = "../your-life-in-x" }
