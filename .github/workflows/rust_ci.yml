@@ -37,7 +37,7 @@ jobs:
             args: --release --exclude esp --all-features --workspace -- -D warnings
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           submodules: recursive
 
